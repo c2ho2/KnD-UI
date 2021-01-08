@@ -1,0 +1,23 @@
+/* You can add global styles to this file, and also import other style files */
+
+.round-border {
+    border-radius: 25px;
+    border: 2px solid #73AD21;
+    padding: 20px;
+}
+
+.centered {
+    margin: auto;
+    width: 80%;
+    padding: 10px;
+    text-align: center;
+}
+
+.row {
+    padding: 10px;
+}
+
+.align-right {
+    display: flex; 
+    justify-content: flex-end;
+}

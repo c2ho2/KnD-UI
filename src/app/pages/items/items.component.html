@@ -1,0 +1,193 @@
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <a class="navbar-brand" href="">KnD Perfumery</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" routerLink="/transactions" routerLinkActive="active">Transcations</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/">Inventory</a>
+        </li>
+        </ul>
+    </div>  
+    </nav>
+
+<div class="" style="padding-top: 20px;">
+    <div class="p-grid">
+        <div class="p-col-8" style="width: 100%;">
+
+        </div>
+        <div class="p-col align-right">
+            <!-- <button class="btn btn-success"  data-toggle="modal" data-target="#itemModal">Add Item</button> -->
+            <p-button (click)="showModalDialog()" icon="pi pi-sign-in" label="Add Item"></p-button>
+        </div>
+    </div>
+    <div class="p-grid">
+        <p-table #dt [value]="items" [paginator]="true" [rows]="10" [rowHover]="true" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]"
+         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [globalFilterFields]="['name','brand','category','stock']" [responsive]="true">
+            <ng-template pTemplate="caption">
+                <div class="table-header">
+                    List of Items
+                        <span class="p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Search" />
+                        </span>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="name">
+                        Name
+                        <p-sortIcon field="name"></p-sortIcon>
+                        <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
+                    </th>
+                    <th pSortableColumn="brand">
+                        Brand
+                        <p-sortIcon field="brand"></p-sortIcon>
+                        <p-columnFilter type="text" field="brand" display="menu"></p-columnFilter></th>
+                    <th pSortableColumn="category">
+                        Category
+                        <p-sortIcon field="category"></p-sortIcon>
+                        <p-columnFilter type="text" field="category" display="menu"></p-columnFilter></th>
+                    <th pSortableColumn="volume">
+                        Volume
+                        <p-sortIcon field="volume"></p-sortIcon>
+                        <p-columnFilter type="text" field="volume" display="menu"></p-columnFilter></th>
+                    <th pSortableColumn="stock">
+                        Stock
+                        <p-sortIcon field="stock"></p-sortIcon>
+                        <p-columnFilter type="text" field="stock" display="menu"></p-columnFilter></th>
+                    <th pSortableColumn="cost">
+                        Cost
+                        <p-sortIcon field="cost"></p-sortIcon>
+                        <p-columnFilter type="text" field="cost" display="menu"></p-columnFilter></th>
+                    <th pSortableColumn="price">
+                        Price
+                        <p-sortIcon field="price"></p-sortIcon>
+                        <p-columnFilter type="text" field="price" display="menu"></p-columnFilter></th>
+                    <th>Actions</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-item>
+                <tr>
+                    <td>{{item.name}}</td>
+                    <td>{{item.brand}}</td>
+                    <td>{{item.category}}</td>
+                    <td>{{item.volume}}</td>
+                    <td>{{item.stock}}</td>
+                    <td>{{item.cost}}</td>
+                    <td>{{item.price}}</td>
+                    <td>
+                        <button pButton type="button" icon="pi pi-plus-circle" class="p-button-rounded p-button-success p-button-text" (click)="addStock(item)"></button>
+                        <button pButton type="button" icon="pi pi-minus-circle" class="p-button-rounded p-button-danger p-button-text" (click)="removeStock(item)"></button>
+                        <!-- <button class="btn" value="{{item._id}}" (click)="addStock(item)"><i class="pi fa-plus-circle"></i></button> -->
+                        <!-- <button class="btn" value="{{item._id}}" (click)="removeStock(item)"><i class="pi fa-minus-circle"></i></button> -->
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>  
+    </div>
+</div>
+
+<!-- <div class="modal fade" id="itemModal" tabindex="-1" role="dialog" aria-labelledby="itemModalTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="itemModalTitle">Add Item</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="form-group">
+                    <label for="itemName">Name</label>
+                    <input type="text" name="itemName" class="form-control" id="itemName" placeholder="Item Name" [(ngModel)]="itemName">
+                </div>
+                <div class="form-group">
+                    <label for="itemBrand">Brand</label>
+                    <input type="text" name="itemBrand" class="form-control" id="itemBrand" [(ngModel)]="itemBrand" placeholder="Item Brand">
+                    <div class="dropdown" style="padding-top: 5px;">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="brandDD" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Existing Brands
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="brandDD">
+                          <button class="dropdown-item" type="button" *ngFor="let brand of brandList" (click)="setBrand(brand.name)">{{brand.name}}</button>
+                        </div>
+                    </div>
+                </div>                
+                <div class="form-group">
+                    <label for="itemCategory">Category</label>
+                    <input type="text" name="itemCategory" class="form-control" id="itemCategory" [(ngModel)]="itemCategory" placeholder="Item Category">
+                    <div class="dropdown" style="padding-top: 5px;">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="categoryDD" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Existing Categories
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="categoryDD">
+                          <button class="dropdown-item" type="button" *ngFor="let category of categoryList" (click)="setCategory(category.name)">{{category.name}}</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="itemVolume">Volume</label>
+                    <input type="text" name="itemVolume" class="form-control" id="itemVolume" [(ngModel)]="itemVolume" placeholder="Item Volume">
+                    <div class="dropdown" style="padding-top: 5px;">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="volumeDD" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Existing Volumes
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="volumeDD">
+                          <button class="dropdown-item" type="button" *ngFor="let volume of volumeList" (click)="setVolume(volume.name)">{{volume.name}}</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="itemCost">Cost</label>
+                    <input type="number" name="itemCost" class="form-control" id="itemCost" [(ngModel)]="itemCost">
+                </div>
+                <div class="form-group">
+                    <label for="itemPrice">Price</label>
+                    <input type="number" name="itemPrice" class="form-control" id="itemPrice" [(ngModel)]="itemPrice">
+                </div>            
+            </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" (click)="saveItem()" data-dismiss="modal">Save</button>
+        </div>
+    </div>
+</div> -->
+
+<p-dialog header="Add Item" [(visible)]="displayModal" [modal]="true" styleClass="ui-Dialog" (onHide)="clearModalInputs()">    
+    <div class="p-fluid">
+        <div class="p-field">
+            <label for="itemName">Name</label>
+            <input id="itemName" type="text" pInputText [(ngModel)]="itemName"> 
+        </div>
+        <div class="p-field">
+            <label for="itemBrand">Brand</label>
+            <p-dropdown [options]="brandList" [(ngModel)]="itemBrand" editable="true"></p-dropdown>
+        </div>
+        <div class="p-field">
+            <label for="itemCategory">Category</label>
+            <p-dropdown [options]="categoryList" [(ngModel)]="itemCategory" editable="true"></p-dropdown>
+        </div>
+        <div class="p-field">
+            <label for="itemVolume">Volume</label>
+            <p-dropdown [options]="volumeList" [(ngModel)]="itemVolume" editable="true" (click)="setCP()"></p-dropdown>
+        </div>
+        <div class="p-field">
+            <label for="itemCost">Cost</label>
+            <p-inputNumber [(ngModel)]="itemCost" mode="currency" currency="PHP" [minFractionDigits]="2"></p-inputNumber>
+        </div>
+        <div class="p-field">
+            <label for="itemPrice">Price</label>
+            <p-inputNumber [(ngModel)]="itemPrice" mode="currency" currency="PHP" [minFractionDigits]="2"></p-inputNumber>
+        </div>
+    </div>    
+    <ng-template pTemplate="footer">
+        <p-button icon="pi pi-plus" (click)="displayModal=false; saveItem();" label="Save" styleClass="p-button-text"></p-button>
+    </ng-template>
+</p-dialog>

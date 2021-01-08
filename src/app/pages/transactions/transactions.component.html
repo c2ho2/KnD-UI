@@ -1,0 +1,149 @@
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <a class="navbar-date" href="">KnD Perfumery</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" routerLink="/transactions" routerLinkActive="active">Transcations</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/">Inventory</a>
+        </li>
+        </ul>
+    </div>  
+    </nav>
+
+<div class="" style="padding-top: 20px;">
+    <div class="p-grid">
+        <div class="p-col-8" style="width: 100%;">
+
+        </div>
+        <div class="p-col align-right">
+            <p-button (click)="showModalDialog()" icon="pi pi-sign-in" label="Add Item"></p-button>
+        </div>
+    </div>
+    <div class="p-grid">
+        <p-table #dt [value]="transactions" [paginator]="true" [rows]="10" [rowHover]="true" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]"
+         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [globalFilterFields]="['account','date','description','category','client','itemList']" [responsive]="true">
+            <ng-template pTemplate="caption">
+                <div class="table-header">
+                    List of Transactions
+                        <span class="p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Search" />
+                        </span>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="account">
+                        Account
+                        <p-sortIcon field="account"></p-sortIcon>
+                        <p-columnFilter type="text" field="account" display="menu"></p-columnFilter>
+                    </th>
+                    <th pSortableColumn="date">
+                        Date
+                        <p-sortIcon field="date"></p-sortIcon>
+                        <p-columnFilter type="text" field="date" display="menu"></p-columnFilter></th>
+                    <th pSortableColumn="description">
+                        Description
+                        <p-sortIcon field="description"></p-sortIcon>
+                        <p-columnFilter type="text" field="description" display="menu"></p-columnFilter></th>
+                    <th pSortableColumn="category">
+                        Category
+                        <p-sortIcon field="category"></p-sortIcon>
+                        <p-columnFilter type="text" field="category" display="menu"></p-columnFilter></th>
+                    <th pSortableColumn="client">
+                        Client
+                        <p-sortIcon field="client"></p-sortIcon>
+                        <p-columnFilter type="text" field="client" display="menu"></p-columnFilter></th>
+                    <th>
+                        Items
+                    <th pSortableColumn="amount">
+                        Amount
+                        <p-sortIcon field="amount"></p-sortIcon>
+                        <p-columnFilter type="text" field="amount" display="menu"></p-columnFilter></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-transaction>
+                <tr>
+                    <td>{{transaction.account}}</td>
+                    <td>{{transaction.date}}</td>
+                    <td>{{transaction.description}}</td>
+                    <td>{{transaction.category}}</td>
+                    <td>{{transaction.client}}</td>
+                    <td>
+                        <!-- {{transaction.itemList}} -->
+                        <p-button (click)="setItems(transaction)" label="Items"></p-button>
+                    </td>
+                    <td>{{transaction.amount}}</td>
+                </tr>
+            </ng-template>
+        </p-table>  
+    </div>
+</div>
+
+<p-dialog header="Items" [(visible)]="showItemModal" [modal]="true" styleClass="ui-Dialog" (onHide)="clearItemList()">
+    <p-table [value]="itemList">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Brand
+                </th>
+                <th>
+                    Category
+                </th>
+                <th>
+                    Volume
+                </th>
+                <th>
+                    Amount
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-tItem>
+            <tr>
+                <td>{{tItem.item.name}}</td>
+                <td>{{tItem.item.brand}}</td>
+                <td>{{tItem.item.category}}</td>
+                <td>{{tItem.item.volume}}</td>
+                <td>{{tItem.amount}}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</p-dialog>
+
+<p-dialog header="Add Item" [(visible)]="displayModal" [modal]="true" styleClass="ui-Dialog">    
+    <div class="p-fluid">
+        <div class="p-field">
+            <label for="transactionAccount">Account</label>
+            <input id="transactionAccount" type="text" pInputText [(ngModel)]="transactionAccount"> 
+        </div>
+        <div class="p-field">
+            <label for="transactionDate">Date</label>
+        </div>
+        <div class="p-field">
+            <label for="transactionDescription">Description</label>
+            <input id="transactionDescription" type="text" pInputText [(ngModel)]="transactionDescription"> 
+        </div>
+        <div class="p-field">
+            <label for="transactionCategory">Category</label>
+            <p-dropdown [options]="categories" [(ngModel)]="transactionCategory" editable="true"></p-dropdown>
+        </div>
+        <div class="p-field">
+            <label for="transactionCost">Cost</label>
+        </div>
+        <div class="p-field">
+            <label for="transactionAmount">Amount</label>
+            <p-inputNumber [(ngModel)]="transactionAmount" mode="currency" currency="PHP" [minFractionDigits]="2"></p-inputNumber>
+        </div>
+    </div>    
+    <ng-template pTemplate="footer">
+        <p-button icon="pi pi-plus" (click)="displayModal=false" label="Save" styleClass="p-button-text"></p-button>
+    </ng-template>
+</p-dialog>
